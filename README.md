@@ -32,4 +32,4 @@ Now, run:
 
 `python3 manage.py runserver`
 
-and continue to the login page to get started.
+and continue to the login page at `http://127.0.0.1:8000` to get started
