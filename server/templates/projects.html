@@ -3,16 +3,13 @@
 {% load widget_tweaks %}
 {% block content %}
 <div id="projects_root" v-cloak>
-  <section class="hero project-image">
+  <section class="hero">
     <div class="container">
       <div class="columns">
         <div class="column is-10 is-offset-1">
-          <h1 class="title is-1 has-text-white">
+          <h1 class="title is-1 has-text-white" style="color:black">
             Hello, {{ user.get_username | title }}.
           </h1>
-          <h2 class="subtitle is-4 has-text-white">
-            I hope you are having a great day!
-          </h2>
           {% if user.is_superuser %}
           <p>
             <a class="button is-medium is-primary" @click="isActive=!isActive">
@@ -90,7 +87,6 @@
               <div class="select">
                 <select v-model="selected">
                   <option selected>All Project</option>
-                  <option>Text Classification</option>
                   <option>Sequence Labeling</option>
                   <option>Seq2seq</option>
                 </select>
