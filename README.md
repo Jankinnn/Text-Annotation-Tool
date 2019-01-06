@@ -14,7 +14,7 @@ A simple text annotation tool based on Django for producing custom datasets for 
 <br>
 Clone the repository using the following set of commands:
 
-`git clone https://github.com/sudhamstarun/Text-Annotation-Tool.git`
+`git clone https://github.com/sudhamstarun/Text-Annotation-Tool.git`<br>
 `cd app`
 
 Now migrate the project by using:
