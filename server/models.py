@@ -38,15 +38,6 @@ class Project(models.Model):
         return {'total': total, 'remaining': remaining}
 
     @property
-    def image(self):
-        if self.is_type_of(self.DOCUMENT_CLASSIFICATION):
-            url = staticfiles_storage.url('images/cat-1045782_640.jpg')
-        elif self.is_type_of(self.SEQUENCE_LABELING):
-            url = staticfiles_storage.url('images/cat-3449999_640.jpg')
-        elif self.is_type_of(self.Seq2seq):
-            url = staticfiles_storage.url('images/tiger-768574_640.jpg')
-
-        return url
 
     def get_template_name(self):
         if self.is_type_of(Project.DOCUMENT_CLASSIFICATION):
