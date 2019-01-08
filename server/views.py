@@ -69,7 +69,6 @@ class DataUpload(SuperUserMixin, LoginRequiredMixin, TemplateView):
                     ])
                 else:
                     reader = csv.reader(form_data)
-                    reader = reader.replace("\n", "")
                     Document.objects.bulk_create([
                         Document(text=line[0].strip(), project=project)
                         for line in reader
