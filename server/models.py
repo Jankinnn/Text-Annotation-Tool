@@ -119,12 +119,14 @@ class Project(models.Model):
 
 
 class Label(models.Model):
-    KEY_CHOICES = ((u, c) for u, c in zip(string.ascii_lowercase, string.ascii_lowercase))
+    KEY_CHOICES = ((u, c) for u, c in zip(
+        string.ascii_lowercase, string.ascii_lowercase))
     COLOR_CHOICES = ()
 
     text = models.CharField(max_length=100)
     shortcut = models.CharField(max_length=10, choices=KEY_CHOICES)
-    project = models.ForeignKey(Project, related_name='labels', on_delete=models.CASCADE)
+    project = models.ForeignKey(
+        Project, related_name='labels', on_delete=models.CASCADE)
     background_color = models.CharField(max_length=7, default='#209cee')
     text_color = models.CharField(max_length=7, default='#ffffff')
 
@@ -140,7 +142,8 @@ class Label(models.Model):
 
 class Document(models.Model):
     text = models.TextField()
-    project = models.ForeignKey(Project, related_name='documents', on_delete=models.CASCADE)
+    project = models.ForeignKey(
+        Project, related_name='documents', on_delete=models.CASCADE)
 
     def get_annotations(self):
         if self.project.is_type_of(Project.DOCUMENT_CLASSIFICATION):
@@ -169,13 +172,34 @@ class Document(models.Model):
 
     def make_dataset_for_sequence_labeling(self):
         annotations = self.get_annotations()
-        dataset = [[self.id, ch, 'O'] for ch in self.text]
+        print(self.text)
+        split_word = self.text.split()
+        print(split_word)
+        dataset = [[self.id, ch, 'O'] for ch in split_word]
+        print(dataset)
+        countWord = 0
         for a in annotations:
+            print("A.START OFFSET: ", a.start_offset)
+            print("A.END OFFSET: ", a.end_offset)
+
+            # Finding the number of words in the string for the given number of chars used
             for i in range(a.start_offset, a.end_offset):
-                if i == a.start_offset:
-                    dataset[i][2] = 'B-{}'.format(a.label.text)
-                else:
-                    dataset[i][2] = 'I-{}'.format(a.label.text)
+                for k in range(len(split_word)):
+                    while countLen != a.start_offset + a.end_offset:
+                        if k == 1:
+                            countLen = len(split_word[k])
+                            countWord += 1
+                        else:
+                            countLen = len(split_word[k]) + 1
+                            countWord += 1
+
+                for w in range(len(split_word)):
+                    for q in range(countWord):
+                        if q == 1:
+                            dataset[w][2] = 'B-{}'.format(a.label.text)
+                        else:
+                            dataset[w][2] = 'I-{}'.format(a.label.text)
+        print(dataset)
         return dataset
 
     def make_dataset_for_seq2seq(self):
@@ -199,25 +223,29 @@ class Document(models.Model):
         annotations = self.get_annotations()
         labels = [a.label.text for a in annotations]
         username = annotations[0].user.username
-        dataset = {'doc_id': self.id, 'text': self.text, 'labels': labels, 'username': username}
+        dataset = {'doc_id': self.id, 'text': self.text,
+                   'labels': labels, 'username': username}
         return dataset
 
     def make_dataset_for_sequence_labeling_json(self):
         annotations = self.get_annotations()
-        entities = [(a.start_offset, a.end_offset, a.label.text) for a in annotations]
+        entities = [(a.start_offset, a.end_offset, a.label.text)
+                    for a in annotations]
         username = annotations[0].user.username
-        dataset = {'doc_id': self.id, 'text': self.text, 'entities': entities, 'username': username}
+        dataset = {'doc_id': self.id, 'text': self.text,
+                   'entities': entities, 'username': username}
         return dataset
 
     def make_dataset_for_seq2seq_json(self):
         annotations = self.get_annotations()
         sentences = [a.text for a in annotations]
         username = annotations[0].user.username
-        dataset = {'doc_id': self.id, 'text': self.text, 'sentences': sentences, 'username': username}
+        dataset = {'doc_id': self.id, 'text': self.text,
+                   'sentences': sentences, 'username': username}
         return dataset
 
     def __str__(self):
-        return self.text[:50]
+        return self.text.split()
 
 
 class Annotation(models.Model):
@@ -230,7 +258,8 @@ class Annotation(models.Model):
 
 
 class DocumentAnnotation(Annotation):
-    document = models.ForeignKey(Document, related_name='doc_annotations', on_delete=models.CASCADE)
+    document = models.ForeignKey(
+        Document, related_name='doc_annotations', on_delete=models.CASCADE)
     label = models.ForeignKey(Label, on_delete=models.CASCADE)
 
     class Meta:
@@ -238,7 +267,8 @@ class DocumentAnnotation(Annotation):
 
 
 class SequenceAnnotation(Annotation):
-    document = models.ForeignKey(Document, related_name='seq_annotations', on_delete=models.CASCADE)
+    document = models.ForeignKey(
+        Document, related_name='seq_annotations', on_delete=models.CASCADE)
     label = models.ForeignKey(Label, on_delete=models.CASCADE)
     start_offset = models.IntegerField()
     end_offset = models.IntegerField()
@@ -248,11 +278,13 @@ class SequenceAnnotation(Annotation):
             raise ValidationError('start_offset is after end_offset')
 
     class Meta:
-        unique_together = ('document', 'user', 'label', 'start_offset', 'end_offset')
+        unique_together = ('document', 'user', 'label',
+                           'start_offset', 'end_offset')
 
 
 class Seq2seqAnnotation(Annotation):
-    document = models.ForeignKey(Document, related_name='seq2seq_annotations', on_delete=models.CASCADE)
+    document = models.ForeignKey(
+        Document, related_name='seq2seq_annotations', on_delete=models.CASCADE)
     text = models.TextField()
 
     class Meta:
