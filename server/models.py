@@ -171,52 +171,37 @@ class Document(models.Model):
         return dataset
 
     def make_dataset_for_sequence_labeling(self):
+
         annotations = self.get_annotations()
         split_word = self.text.split()
         dataset = [[self.id, ch, 'O'] for ch in split_word]
+        print(dataset)
 
         for a in annotations:
-            countWord = 1
-            countLen = 1
-            countWordSinceStart = 1
+            currentTagWords = self.text[a.start_offset: a.end_offset]
+            print(currentTagWords)
+            numWords = currentTagWords.count(' ') + 1
+            print("Num Words", numWords)
+            countWord = 0
+            countLen = 0
+            countNum = 0
+            countWordSinceStart = 0
             print("A.START OFFSET: ", a.start_offset)
             print("A.END OFFSET: ", a.end_offset)
 
             # Finding the number of words in the string since the start of the current first word in question
-            while countLen != 0 + a.start_offset:
-                print("Value of a.startOffset: ", a.start_offset)
-                for k in range(len(split_word)):
-                    if countLen == a.start_offset:
-                        break
-                    else:
-                        countLen += len(split_word[k]) + 1
-                        countWordSinceStart += 1
+            tempsplit = self.text[:a.start_offset]
+            countWordSinceStart = tempsplit.count(' ') + 1
 
-                    print("Value of countLen ", countLen)
+            print("CountWordSinceStart: ", countWordSinceStart - 2)
+            print(self.text.split()[countWordSinceStart-2])
 
-            print("CountWordSinceStart: ", countWordSinceStart)
-            print(self.text.split()[countWordSinceStart-1])
+            for i in range(len(split_word)):
+                if i == countWordSinceStart-2:
+                    dataset[i][2] = 'B-{}'.format(a.label.text)
+                    for j in range(1, numWords):
+                        dataset[i+j][2] = 'I-{}'.format(a.label.text)
 
-            # Finding the number of words in the string for the given number of chars used
-            while countLen != a.end_offset - a.start_offset:
-                for k in range(len(split_word)):
-                    if k == countWordSinceStart:
-                        countLen = len(split_word[k])
-                        countWord += 1
-                    else:
-                        countLen = len(split_word[k]) + 1
-                        countWord += 1
-
-            for k in range(len(split_word)):
-                for i in range(countWord):
-                    if k == countWordSinceStart:
-                        dataset[countWordSinceStart][2] = 'B-{}'.format(
-                            a.label.text)
-                    else:
-                        dataset[countWordSinceStart +
-                                i][2] = 'I-{}'.format(a.label.text)
-
-        print(dataset)
         return dataset
 
     def make_dataset_for_seq2seq(self):
