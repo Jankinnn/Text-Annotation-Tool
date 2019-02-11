@@ -177,6 +177,7 @@ class Document(models.Model):
         dataset = [[self.id, ch, 'O'] for ch in split_word]
 
         for a in annotations:
+            #Initiating the counters required
             currentTagWords = self.text[a.start_offset: a.end_offset].split()
             numWords = len(currentTagWords)
             countWord = 0
@@ -188,6 +189,7 @@ class Document(models.Model):
             tempsplit = self.text[:a.start_offset].split()
             countWordSinceStart = len(tempsplit)
 
+            # Annotating the dataset with the respective NER BIO tags based on the CONLL2003 dataset
             for i in range(len(split_word)):
                 if i == countWordSinceStart:
                     dataset[i][2] = 'B-{}'.format(a.label.text)
