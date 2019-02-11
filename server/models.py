@@ -1,4 +1,5 @@
 import string
+from collections import Counter
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse
@@ -178,9 +179,8 @@ class Document(models.Model):
         print(dataset)
 
         for a in annotations:
-            currentTagWords = self.text[a.start_offset: a.end_offset]
-            print(currentTagWords)
-            numWords = currentTagWords.count(' ') + 1
+            currentTagWords = self.text[a.start_offset: a.end_offset].split()
+            numWords = len(currentTagWords)
             print("Num Words", numWords)
             countWord = 0
             countLen = 0
@@ -190,14 +190,14 @@ class Document(models.Model):
             print("A.END OFFSET: ", a.end_offset)
 
             # Finding the number of words in the string since the start of the current first word in question
-            tempsplit = self.text[:a.start_offset]
-            countWordSinceStart = tempsplit.count(' ') + 1
+            tempsplit = self.text[:a.start_offset].split()
+            countWordSinceStart = len(tempsplit)
 
-            print("CountWordSinceStart: ", countWordSinceStart - 2)
-            print(self.text.split()[countWordSinceStart-2])
+            print("CountWordSinceStart: ", countWordSinceStart)
+            print(self.text.split()[countWordSinceStart])
 
             for i in range(len(split_word)):
-                if i == countWordSinceStart-2:
+                if i == countWordSinceStart:
                     dataset[i][2] = 'B-{}'.format(a.label.text)
                     for j in range(1, numWords):
                         dataset[i+j][2] = 'I-{}'.format(a.label.text)
