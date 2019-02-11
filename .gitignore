@@ -2,3 +2,4 @@
 .vscode/db.sqlite3
 server/__pycache__/models.cpython-36.pyc
 server/__pycache__/views.cpython-36.pyc
+log server/__pycache__/models.cpython-36.pyc
