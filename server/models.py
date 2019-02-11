@@ -172,7 +172,6 @@ class Document(models.Model):
         return dataset
 
     def make_dataset_for_sequence_labeling(self):
-
         annotations = self.get_annotations()
         split_word = self.text.split()
         dataset = [[self.id, ch, 'O'] for ch in split_word]
