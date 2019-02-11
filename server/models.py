@@ -176,25 +176,18 @@ class Document(models.Model):
         annotations = self.get_annotations()
         split_word = self.text.split()
         dataset = [[self.id, ch, 'O'] for ch in split_word]
-        print(dataset)
 
         for a in annotations:
             currentTagWords = self.text[a.start_offset: a.end_offset].split()
             numWords = len(currentTagWords)
-            print("Num Words", numWords)
             countWord = 0
             countLen = 0
             countNum = 0
             countWordSinceStart = 0
-            print("A.START OFFSET: ", a.start_offset)
-            print("A.END OFFSET: ", a.end_offset)
 
             # Finding the number of words in the string since the start of the current first word in question
             tempsplit = self.text[:a.start_offset].split()
             countWordSinceStart = len(tempsplit)
-
-            print("CountWordSinceStart: ", countWordSinceStart)
-            print(self.text.split()[countWordSinceStart])
 
             for i in range(len(split_word)):
                 if i == countWordSinceStart:
