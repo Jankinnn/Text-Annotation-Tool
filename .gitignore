@@ -3,3 +3,9 @@
 server/__pycache__/models.cpython-36.pyc
 server/__pycache__/views.cpython-36.pyc
 log server/__pycache__/models.cpython-36.pyc
+app/__pycache__/__init__.cpython-37.pyc
+app/__pycache__/settings.cpython-37.pyc
+server/__pycache__/__init__.cpython-37.pyc
+server/__pycache__/apps.cpython-37.pyc
+.vscode/settings.json
+db.sqlite3
