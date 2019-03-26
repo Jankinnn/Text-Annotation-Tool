@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 .db.sqlite3/
 .vscode/db.sqlite3
 server/__pycache__/models.cpython-36.pyc
@@ -8,4 +9,6 @@ app/__pycache__/settings.cpython-37.pyc
 server/__pycache__/__init__.cpython-37.pyc
 server/__pycache__/apps.cpython-37.pyc
 .vscode/settings.json
+=======
+>>>>>>> Stashed changes
 db.sqlite3
